@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC-K Test</title>
+    <style>
+        /* Allgemeines Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .question {
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            font-size: 18px;
+            text-align: left;
+        }
+        strong {
+            color: #4CAF50;
+        }
+        em {
+            color: #666;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Need for Cognition Test (NFC-K)</h1>
+    <div class="container">
+        <p>Bitte beantworten Sie die folgenden Fragen auf einer Skala von 1 (trifft überhaupt nicht zu) bis 7 (trifft ganz genau zu):</p>
+        
+        <div class="question">
+            <label for="q1">1. Es genügt mir einfach, die Antwort zu kennen, ohne die Gründe zu verstehen.</label>
+            <input type="number" id="q1" min="1" max="7" placeholder="1-7">
+        </div>
+        <div class="question">
+            <label for="q2">2. Ich habe es gern, wenn mein Leben voller kniffliger Aufgaben ist, die ich lösen muss.</label>
+            <input type="number" id="q2" min="1" max="7" placeholder="1-7">
+        </div>
+        <div class="question">
+            <label for="q3">3. Ich würde kompliziertere Probleme einfachen Problemen vorziehen.</label>
+            <input type="number" id="q3" min="1" max="7" placeholder="1-7">
+        </div>
+        <div class="question">
+            <label for="q4">4. In erster Linie denke ich, weil ich muss.</label>
+            <input type="number" id="q4" min="1" max="7" placeholder="1-7">
+        </div>
+
+        <button onclick="calculateNFC()">Ergebnis berechnen</button>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function calculateNFC() {
+            // Eingabewerte abrufen
+            const q1 = parseInt(document.getElementById("q1").value);
+            const q2 = parseInt(document.getElementById("q2").value);
+            const q3 = parseInt(document.getElementById("q3").value);
+            const q4 = parseInt(document.getElementById("q4").value);
+
+            // Eingaben prüfen
+            if ([q1, q2, q3, q4].some(value => isNaN(value) || value < 1 || value > 7)) {
+                alert("Bitte geben Sie für alle Fragen Zahlen zwischen 1 und 7 ein.");
+                return;
+            }
+
+            // Invertierung von Frage 1 und 4
+            const invertedQ1 = 8 - q1;
+            const invertedQ4 = 8 - q4;
+
+            // Mittelwert berechnen
+            const nfcScore = (invertedQ1 + q2 + q3 + invertedQ4) / 4;
+
+            // Komplexere Interpretation
+            let interpretation = "";
+            if (nfcScore <= 2.5) {
+                interpretation = `<strong>Geringe NFC-Ausprägung:</strong> Sie meiden kognitive Anstrengung und bevorzugen einfache Routinen. <br>
+                <em>Empfehlung:</em> Starten Sie mit kleinen, spielerischen Denkaufgaben wie Puzzles oder Quizzen, um Denkfreude zu entwickeln.`;
+            } else if (nfcScore <= 3.5) {
+                interpretation = `<strong>Unterdurchschnittliche NFC-Ausprägung:</strong> Sie beschäftigen sich selten mit Denkaufgaben, neigen aber zu pragmatischen Lösungen. <br>
+                <em>Empfehlung:</em> Probieren Sie Problemlösungs-Apps oder Denkspiele aus, um Ihre Motivation zu steigern.`;
+            } else if (nfcScore <= 4.5) {
+                interpretation = `<strong>Moderate NFC-Ausprägung:</strong> Sie lösen Denkaufgaben situativ und sind offen für kognitive Herausforderungen. <br>
+                <em>Empfehlung:</em> Nutzen Sie herausfordernde Projekte, um Ihre Freude am Denken zu stärken.`;
+            } else if (nfcScore <= 5.5) {
+                interpretation = `<strong>Überdurchschnittliche NFC-Ausprägung:</strong> Sie genießen Denkaufgaben und analytisches Arbeiten. <br>
+                <em>Empfehlung:</em> Betätigen Sie sich in komplexen Denkaufgaben oder kniffligen Spielen wie Schach, Sudoku oder Logikrätseln.`;
+            } else {
+                interpretation = `<strong>Hohe NFC-Ausprägung:</strong> Sie lieben es, kognitive Herausforderungen anzunehmen und in komplexe Themen einzutauchen. <br>
+                <em>Empfehlung:</em> Nutzen Sie Ihre Stärken, um Projekte zu leiten oder andere zu inspirieren. Tätigkeiten wie Programmierung, Strategieplanung oder Forschung passen gut zu Ihnen.`;
+            }
+
+            // Ergebnis anzeigen
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `
+                <p><strong>Ihr NFC-Wert:</strong> ${nfcScore.toFixed(2)}</p>
+                <p>${interpretation}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
